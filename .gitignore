@@ -4,3 +4,4 @@
 *.DotSettings
 /secrets/*
 appsettings.local.json
+publish-notes.txt
