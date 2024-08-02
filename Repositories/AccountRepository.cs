@@ -1,11 +1,13 @@
 using Google.Cloud.Firestore;
+using Microsoft.Extensions.Options;
 using Wallet.Firebase.Api.Domain;
+using Wallet.Firebase.Api.Models.Settings;
 using Wallet.Firebase.Api.Repositories.Interfaces;
 using Transaction = Wallet.Firebase.Api.Domain.Transaction;
 
 namespace Wallet.Firebase.Api.Repositories;
 
-public class AccountRepository : BaseRepository, IAccountRepository
+public class AccountRepository(IOptions<FirebaseSettings> firebaseSettings) : BaseRepository(firebaseSettings), IAccountRepository
 {
     public async Task<Account> GetAccountDetails(string accountId)
     {

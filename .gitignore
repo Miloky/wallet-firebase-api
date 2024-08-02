@@ -3,3 +3,4 @@
 /.idea
 *.DotSettings
 /secrets/*
+appsettings.local.json
