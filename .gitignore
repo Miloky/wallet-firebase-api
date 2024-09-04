@@ -1,7 +1,11 @@
-/obj
-/bin
-/.idea
-*.DotSettings
-/secrets/*
 appsettings.local.json
+backend/secrets/*
+
+
+obj
+*.DotSettings
+
+
 publish-notes.txt
+.idea
+bin
