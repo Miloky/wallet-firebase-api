@@ -1,4 +1,5 @@
 using Mapster;
+using Microsoft.AspNetCore.HttpOverrides;
 using Wallet.Firebase.Api.Models.Settings;
 using Wallet.Firebase.Api.Repositories;
 using Wallet.Firebase.Api.Repositories.Interfaces;
@@ -19,8 +20,17 @@ builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
+
+// TODO: Do we need it?
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+app.UseCors(o => o.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 app.UseRouting();
 app.MapDefaultControllerRoute();
+app.MapGet("/", () => "Wallet.Firebase.Api");
 
 app.Run();
 
