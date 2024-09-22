@@ -5,6 +5,7 @@ namespace Wallet.Firebase.Api.Services.Interfaces;
 
 public interface IAccountService
 {
+    Task<IEnumerable<AccountResponse>> GetAccounts();
     Task<AccountDetailsResponse> GetAccountDetails(string accountId);
     Task<AccountTransactionsResponse> GetTransactions(string accountId);
     Task<IdResponse> CreateTransaction(string accountId, CreateTransactionRequest transactionRequest);

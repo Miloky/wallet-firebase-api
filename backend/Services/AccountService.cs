@@ -10,6 +10,12 @@ namespace Wallet.Firebase.Api.Services;
 
 public class AccountService(IAccountRepository accountRepository) : IAccountService
 {
+    public async Task<IEnumerable<AccountResponse>> GetAccounts()
+    {
+        var accounts = await accountRepository.GetAccounts();
+        return accounts.Adapt<AccountResponse[]>();
+    }
+
     public async Task<AccountDetailsResponse> GetAccountDetails(string accountId)
     {
         var accountDetails = await accountRepository.GetAccountDetails(accountId);
@@ -33,10 +39,10 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         transaction.Id = accountId;
         var accountDetails = await accountRepository.GetAccountDetails(accountId);
         var idEntity = await accountRepository.CreateTransaction(accountId, transaction);
-        
+
         var balance = GetUpdatedBalance(accountDetails.Balance, transaction.Amount, transaction.Type);
         await accountRepository.UpdateBalance(accountId, balance);
-        
+
         return idEntity.Adapt<IdResponse>();
     }
 
@@ -46,7 +52,7 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         var transactionDetails = await accountRepository.GetTransactionDetails(accountId, transactionId);
         // amount with "-" sign to revert.
         await accountRepository.DeleteAccountTransaction(accountId, transactionId);
-        
+
         var balance = GetUpdatedBalance(accountDetails.Balance, -transactionDetails.Amount, transactionDetails.Type);
         await accountRepository.UpdateBalance(accountId, balance);
     }

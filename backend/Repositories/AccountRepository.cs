@@ -9,6 +9,24 @@ namespace Wallet.Firebase.Api.Repositories;
 
 public class AccountRepository(IOptions<FirebaseSettings> firebaseSettings) : BaseRepository(firebaseSettings), IAccountRepository
 {
+    public async Task<IEnumerable<Account>> GetAccounts()
+    {
+        var path = "accounts";
+        var collectionRef = Store.Collection(path);
+        var querySnapshot = await collectionRef.GetSnapshotAsync();
+        var result = new List<Account>();
+
+        foreach (var documentSnapshot in querySnapshot)
+        {
+            if (documentSnapshot.Exists)
+            {
+                result.Add(documentSnapshot.ConvertTo<Account>());
+            }
+        }
+
+        return result;
+    }
+
     public async Task<Account> GetAccountDetails(string accountId)
     {
         var path = GetAccountPath(accountId);
@@ -60,14 +78,14 @@ public class AccountRepository(IOptions<FirebaseSettings> firebaseSettings) : Ba
         var accountRef = Store.Document(accountPath);
         await accountRef.UpdateAsync(new Dictionary<string, object> { { "balance", balanceAmount } });
     }
-    
+
     public async Task DeleteAccountTransaction(string accountId, string transactionId)
     {
         var transactionPath = GetTransactionPath(accountId, transactionId);
         var docRef = Store.Document(transactionPath);
         await docRef.DeleteAsync();
     }
-    
+
     private string GetAccountPath(string accountId) => $"accounts/{accountId}";
     private string GetTransactionCollectionPath(string accountId) => $"accounts/{accountId}/transactions";
     private string GetTransactionPath(string accountId, string transactionId) =>

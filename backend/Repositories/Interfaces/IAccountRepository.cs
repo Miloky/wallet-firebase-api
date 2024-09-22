@@ -4,6 +4,7 @@ namespace Wallet.Firebase.Api.Repositories.Interfaces;
 
 public interface IAccountRepository
 {
+    Task<IEnumerable<Account>> GetAccounts();
     Task<Account> GetAccountDetails(string accountId);
     Task<IEnumerable<Transaction>> GetAccountTransactions(string accountId);
     Task<IdEntity> CreateTransaction(string accountId, Transaction transaction);
