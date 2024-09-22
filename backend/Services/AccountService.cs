@@ -33,9 +33,9 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
     }
 
     // TODO: Need to do update
-    public async Task<IdResponse> CreateTransaction(string accountId, CreateTransactionRequest request)
+    public async Task<IdResponse> CreateTransaction(string accountId, CreateTransactionRequest transactionRequest)
     {
-        var transaction = request.Adapt<Transaction>();
+        var transaction = transactionRequest.Adapt<Transaction>();
         transaction.Id = accountId;
         var accountDetails = await accountRepository.GetAccountDetails(accountId);
         var idEntity = await accountRepository.CreateTransaction(accountId, transaction);
@@ -57,10 +57,11 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         await accountRepository.UpdateBalance(accountId, balance);
     }
 
-    private static double GetUpdatedBalance(double initialBalance, double amount, string transactionType) =>
+    private static double GetUpdatedBalance(double initialBalance, double amount, TransactionType transactionType) =>
         transactionType switch
         {
-            "income" => initialBalance + amount,
-            _ => initialBalance - amount
+            TransactionType.Income => initialBalance + amount,
+            TransactionType.Expense or TransactionType.Transfer => initialBalance - amount,
+            _ => throw new ArgumentOutOfRangeException(nameof(transactionType), transactionType, null)
         };
 }

@@ -10,3 +10,4 @@ publish-notes.txt
 .idea
 bin
 .vs
+*.DotSettings.user

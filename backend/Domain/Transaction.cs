@@ -1,4 +1,5 @@
 using Google.Cloud.Firestore;
+using Wallet.Firebase.Api.FirestoreConverters;
 
 namespace Wallet.Firebase.Api.Domain;
 
@@ -7,17 +8,13 @@ public class Transaction
 {
     [FirestoreDocumentId]
     public string Id { get; set; }
-    
-    [FirestoreProperty("amount")] 
+
+    [FirestoreProperty("amount")]
     public double Amount { get; set; }
-    
-    [FirestoreProperty("description")] 
+
+    [FirestoreProperty("description")]
     public string Description { get; set; }
-    
-    [FirestoreProperty("type")] 
-    public string Type { get; set; }
-    
-    // TODO: add labels
-    // [Firestore]
-    // public string[] Labels { get; set; }
+
+    [FirestoreProperty("type", ConverterType = typeof(TransactionTypeConverter))]
+    public TransactionType Type { get; set; }
 }
