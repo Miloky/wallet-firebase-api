@@ -8,9 +8,11 @@ public class Account
     [FirestoreDocumentId]
     public string Id { get; set; }
 
+    //TODO: Should the name be unique?
     [FirestoreProperty(Name = "name")]
     public string Name { get; set; }
 
+    // Currency code is immutable and will never be changed for account.
     [FirestoreProperty(Name = "currencyCode")]
     public string CurrencyCode { get; set; }
 

@@ -86,6 +86,13 @@ public class AccountRepository(IOptions<FirebaseSettings> firebaseSettings) : Ba
         await docRef.DeleteAsync();
     }
 
+    public async Task DeleteAccount(string accountId)
+    {
+        var accountPath = GetAccountPath(accountId);
+        var docRef = Store.Document(accountPath);
+        await docRef.DeleteAsync();
+    }
+
     private string GetAccountPath(string accountId) => $"accounts/{accountId}";
     private string GetTransactionCollectionPath(string accountId) => $"accounts/{accountId}/transactions";
     private string GetTransactionPath(string accountId, string transactionId) =>

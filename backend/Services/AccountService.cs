@@ -32,7 +32,7 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         };
     }
 
-    // TODO: Need to do update
+    //TODO: Need to do update
     public async Task<IdResponse> CreateTransaction(string accountId, CreateTransactionRequest transactionRequest)
     {
         var transaction = transactionRequest.Adapt<Transaction>();
@@ -40,7 +40,7 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         var accountDetails = await accountRepository.GetAccountDetails(accountId);
         var idEntity = await accountRepository.CreateTransaction(accountId, transaction);
 
-        var balance = GetUpdatedBalance(accountDetails.Balance, transaction.Amount, transaction.Type);
+        var balance = CalculateBalance(accountDetails.Balance, transaction.Amount, transaction.Type);
         await accountRepository.UpdateBalance(accountId, balance);
 
         return idEntity.Adapt<IdResponse>();
@@ -53,15 +53,27 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         // amount with "-" sign to revert.
         await accountRepository.DeleteAccountTransaction(accountId, transactionId);
 
-        var balance = GetUpdatedBalance(accountDetails.Balance, -transactionDetails.Amount, transactionDetails.Type);
+        var balance = CalculateBalance(accountDetails.Balance, -transactionDetails.Amount, transactionDetails.Type);
         await accountRepository.UpdateBalance(accountId, balance);
     }
 
-    private static double GetUpdatedBalance(double initialBalance, double amount, TransactionType transactionType) =>
+    public async Task DeleteAccount(string accountId)
+    {
+        await accountRepository.DeleteAccount(accountId);
+    }
+
+    private static double CalculateBalance(double initialBalance, double amount, TransactionType transactionType) =>
         transactionType switch
         {
             TransactionType.Income => initialBalance + amount,
             TransactionType.Expense or TransactionType.Transfer => initialBalance - amount,
             _ => throw new ArgumentOutOfRangeException(nameof(transactionType), transactionType, null)
         };
+
+    public async Task<double> GetTotalBalance()
+    {
+        //In the future, we will need to take into account the user currency
+        var accounts = await accountRepository.GetAccounts();
+        return accounts.Sum(account => account.Balance);
+    }
 }

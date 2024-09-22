@@ -10,4 +10,6 @@ public interface IAccountService
     Task<AccountTransactionsResponse> GetTransactions(string accountId);
     Task<IdResponse> CreateTransaction(string accountId, CreateTransactionRequest transactionRequest);
     Task DeleteTransaction(string accountId, string transactionId);
+    Task<double> GetTotalBalance();
+    Task DeleteAccount(string accountId);
 }

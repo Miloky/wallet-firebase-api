@@ -8,6 +8,17 @@ namespace Wallet.Firebase.Api.Controllers;
 [Route("accounts")]
 public class AccountsController(IAccountService accountService) : ControllerBase
 {
+    [HttpGet("total-balance")]
+    public async Task<IActionResult> TotalBalance()
+    {
+        var totalBalance = await accountService.GetTotalBalance();
+        return Ok(new
+        {
+            Balance = totalBalance,
+            CurrencyCode = "UAH"
+        });
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllAccounts()
     {
@@ -16,10 +27,17 @@ public class AccountsController(IAccountService accountService) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetAccountDetails(string id)
+    public async Task<IActionResult> GetAccountDetails([FromRoute]string id)
     {
         var accountDetails = await accountService.GetAccountDetails(id);
         return Ok(accountDetails);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+    {
+        await accountService.DeleteAccount(id);
+        return Ok();
     }
 
     [HttpGet("{accountId}/transactions")]

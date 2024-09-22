@@ -11,4 +11,5 @@ public interface IAccountRepository
     Task UpdateBalance(string accountId, double balance);
     Task DeleteAccountTransaction(string accountId, string transactionId);
     Task<Transaction> GetTransactionDetails(string accountId, string transactionId);
+    Task DeleteAccount(string accountId);
 }
