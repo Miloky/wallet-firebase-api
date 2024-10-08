@@ -19,4 +19,6 @@ public class Transaction
 
     [FirestoreProperty("type", ConverterType = typeof(TransactionTypeConverter))]
     public TransactionType Type { get; set; }
+
+    public DateTime TransactionDate { get; set; }
 }
