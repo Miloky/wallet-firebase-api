@@ -10,11 +10,15 @@
     <PackageReference Include="Google.Cloud.Firestore" Version="3.7.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.14" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="appsettings.local.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
